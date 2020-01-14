@@ -1,4 +1,4 @@
-import React , { useState , useEffect } from 'react';
+import React , { useState , useEffect , useReducer } from 'react';
 import '../css/App.css';
 import Header from './Header';
 import Movie from './Movie';
@@ -7,11 +7,60 @@ import IMovieProps from '../interface/IMovieProps';
 
 const MOVIE_API_URL = "https://www.omdbapi.com/?s=man&apikey=4a3b711b";
 
+type reducerState =
+{
+    loading : boolean ,
+    movies : IMovieProps[] ,
+    errorMessage : string | null;
+};
+
+type action =
+{
+    type : string ,
+    payload : IMovieProps[]
+    error : string | null
+};
+
+const initialState : reducerState =
+{
+    loading : true ,
+    movies : [] ,
+    errorMessage : null
+};
+
+const reducer = (state : reducerState , action : action) =>
+{
+    switch (action.type)
+    {
+        case "SEARCH_MOVIES_REQUEST" :
+            return {
+                ...state ,
+                loading : true ,
+                errorMessage : null
+            };
+        case "SEARCH_MOVIES_SUCCESSS" :
+            return {
+                ...state ,
+                loading : false ,
+                movies : action.payload
+            };
+        case "SERACH_MOVIES_FAILURE" :
+            return {
+                ...state ,
+                loading : false ,
+                errorMessage : action.error
+            };
+        default :
+            return state;
+    };
+};
+
 const App = () =>
 {
-    const [loading , setLoading] = useState(true);
-    const [movies , setMovies] = useState<IMovieProps[]>([]);
-    const [errorMessage , setErrorMessage] = useState<string | null>(null);
+    const [state , dispath] = useReducer(reducer , initialState);
+    //const [loading , setLoading] = useState(true);
+    //const [movies , setMovies] = useState<IMovieProps[]>([]);
+    //const [errorMessage , setErrorMessage] = useState<string | null>(null);
 
     useEffect(() => 
     {
@@ -19,15 +68,27 @@ const App = () =>
             .then(response => response.json())
             .then(jsonResponse =>
             {
-                setMovies(jsonResponse.Search);
-                setLoading(false);
+                dispath
+                ({
+                    type : "SEARCH_MOVIES_SUCCESSS" ,
+                    payload : jsonResponse.Search ,
+                    error : null
+                });
+                //setMovies(jsonResponse.Search);
+                //setLoading(false);
             });
     } , []);
 
     const search = (searchValue : string) =>
     {
-        setLoading(true);
-        setErrorMessage(null);
+        dispath
+        ({
+            type : "SEARCH_MOVIES_REQUEST" ,
+            payload : [] ,
+            error : null
+        });
+        //setLoading(true);
+        //setErrorMessage(null);
 
         fetch(`https://www.omdbapi.com/?s=${searchValue}&apikey=4a3b711b`)
             .then(response => response.json())
@@ -35,16 +96,30 @@ const App = () =>
             {
                 if(jsonResponse.Response === "True")
                 {
-                    setMovies(jsonResponse.Search);
-                    setLoading(false);
+                    dispath
+                    ({
+                        type : "SEARCH_MOVIES_SUCCESSS" ,
+                        payload : jsonResponse.Search ,
+                        error : null
+                    });
+                    //setMovies(jsonResponse.Search);
+                    //setLoading(false);
                 }
                 else
                 {
-                    setErrorMessage(jsonResponse.Error);
-                    setLoading(false);
+                    dispath
+                    ({
+                        type : "SEACH_MOVIES_FAILURE" ,
+                        payload : [] ,
+                        error : jsonResponse.Error
+                    });
+                    //setErrorMessage(jsonResponse.Error);
+                    //setLoading(false);
                 }
             });
     };
+
+    const { movies , errorMessage , loading } = state;
 
     return (
         <div className="App">
