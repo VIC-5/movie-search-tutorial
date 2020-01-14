@@ -1,7 +1,11 @@
 import React from 'react';
-import IHeaderProps from '../interface/IHeaderProps';
 
-const Header = (props : IHeaderProps) => 
+type Props =
+{
+    text : string
+};
+
+const Header = (props : Props) => 
 {
     return (
         <header className="App-header">
