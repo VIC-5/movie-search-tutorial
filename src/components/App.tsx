@@ -1,4 +1,4 @@
-import React , { useState , useEffect , useReducer } from 'react';
+import React , { useEffect , useReducer } from 'react';
 import '../css/App.css';
 import Header from './Header';
 import Movie from './Movie';
