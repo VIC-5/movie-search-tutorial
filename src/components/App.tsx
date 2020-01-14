@@ -58,12 +58,6 @@ const reducer = (state : reducerState , action : action) =>
 const App = () =>
 {
     const [state , dispath] = useReducer(reducer , initialState);
-<<<<<<< HEAD
-=======
-    //const [loading , setLoading] = useState(true);
-    //const [movies , setMovies] = useState<IMovieProps[]>([]);
-    //const [errorMessage , setErrorMessage] = useState<string | null>(null);
->>>>>>> d670f76f1d21d8b8d9b814991a82fccf6df9b0c9
 
     useEffect(() => 
     {
@@ -77,11 +71,6 @@ const App = () =>
                     payload : jsonResponse.Search ,
                     error : null
                 });
-<<<<<<< HEAD
-=======
-                //setMovies(jsonResponse.Search);
-                //setLoading(false);
->>>>>>> d670f76f1d21d8b8d9b814991a82fccf6df9b0c9
             });
     } , []);
 
@@ -93,11 +82,6 @@ const App = () =>
             payload : [] ,
             error : null
         });
-<<<<<<< HEAD
-=======
-        //setLoading(true);
-        //setErrorMessage(null);
->>>>>>> d670f76f1d21d8b8d9b814991a82fccf6df9b0c9
 
         fetch(`https://www.omdbapi.com/?s=${searchValue}&apikey=4a3b711b`)
             .then(response => response.json())
@@ -111,11 +95,6 @@ const App = () =>
                         payload : jsonResponse.Search ,
                         error : null
                     });
-<<<<<<< HEAD
-=======
-                    //setMovies(jsonResponse.Search);
-                    //setLoading(false);
->>>>>>> d670f76f1d21d8b8d9b814991a82fccf6df9b0c9
                 }
                 else
                 {
@@ -125,11 +104,6 @@ const App = () =>
                         payload : [] ,
                         error : jsonResponse.Error
                     });
-<<<<<<< HEAD
-=======
-                    //setErrorMessage(jsonResponse.Error);
-                    //setLoading(false);
->>>>>>> d670f76f1d21d8b8d9b814991a82fccf6df9b0c9
                 }
             });
     };
