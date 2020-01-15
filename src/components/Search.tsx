@@ -1,11 +1,7 @@
 import React , { useState } from 'react';
+import { SearchProps} from '../Types';
 
-type Props =
-{
-    search : (searchValue : string) => void
-};
-
-const Search = (props : Props) =>
+const Search = (props : SearchProps) =>
 {
     const [searchValue , setSearchValue] = useState("");
 

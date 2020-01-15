@@ -3,61 +3,21 @@ import '../css/App.css';
 import Header from './Header';
 import Movie from './Movie';
 import Search from './Search';
-import IMovieProps from '../interface/IMovieProps';
+import Reducer from '../Reducer';
+import { TState } from '../Types';
 
 const MOVIE_API_URL = "https://www.omdbapi.com/?s=man&apikey=4a3b711b";
 
-type reducerState =
-{
-    loading : boolean ,
-    movies : IMovieProps[] ,
-    errorMessage : string | null;
-};
-
-type action =
-{
-    type : string ,
-    payload : IMovieProps[]
-    error : string | null
-};
-
-const initialState : reducerState =
+const initialState : TState =
 {
     loading : true ,
     movies : [] ,
-    errorMessage : null
-};
-
-const reducer = (state : reducerState , action : action) =>
-{
-    switch (action.type)
-    {
-        case "SEARCH_MOVIES_REQUEST" :
-            return {
-                ...state ,
-                loading : true ,
-                errorMessage : null
-            };
-        case "SEARCH_MOVIES_SUCCESSS" :
-            return {
-                ...state ,
-                loading : false ,
-                movies : action.payload
-            };
-        case "SERACH_MOVIES_FAILURE" :
-            return {
-                ...state ,
-                loading : false ,
-                errorMessage : action.error
-            };
-        default :
-            return state;
-    };
-};
+    errorMessage : null ,
+}
 
 const App = () =>
 {
-    const [state , dispath] = useReducer(reducer , initialState);
+    const [state , dispath] = useReducer(Reducer , initialState);
 
     useEffect(() => 
     {
@@ -67,9 +27,8 @@ const App = () =>
             {
                 dispath
                 ({
-                    type : "SEARCH_MOVIES_SUCCESSS" ,
+                    type : "SEARCH_MOVIES_SUCCESS" ,
                     payload : jsonResponse.Search ,
-                    error : null
                 });
             });
     } , []);
@@ -79,8 +38,6 @@ const App = () =>
         dispath
         ({
             type : "SEARCH_MOVIES_REQUEST" ,
-            payload : [] ,
-            error : null
         });
 
         fetch(`https://www.omdbapi.com/?s=${searchValue}&apikey=4a3b711b`)
@@ -91,18 +48,16 @@ const App = () =>
                 {
                     dispath
                     ({
-                        type : "SEARCH_MOVIES_SUCCESSS" ,
+                        type : "SEARCH_MOVIES_SUCCESS" ,
                         payload : jsonResponse.Search ,
-                        error : null
                     });
                 }
                 else
                 {
                     dispath
                     ({
-                        type : "SEACH_MOVIES_FAILURE" ,
-                        payload : [] ,
-                        error : jsonResponse.Error
+                        type : "SEARCH_MOVIES_FAILURE" ,
+                        error : jsonResponse.Error ,
                     });
                 }
             });
@@ -116,20 +71,13 @@ const App = () =>
             <Search search = { search } />
             <p className="App-intro">Favourite movies</p>
             <div className="movies">
-                {
-                    loading && !errorMessage ? (
-                        <span>loading...</span>
-                    ) : errorMessage ? (
-                        <div className="errorMessage">{ errorMessage }</div>
-                    ) : (
-                        movies.map((movie , index) => (
-                            <Movie
-                                key={`${ index }-${ movie.Title }`}
-                                movie={ movie }
-                            />
-                        ))
-                    )
-                }
+            {
+                loading && !errorMessage ?
+                <span>loading...</span> :
+                errorMessage ?
+                <div className="errorMessage">{ errorMessage }</div> :
+                movies.map((movie , index) => <Movie key={`${ index }-${ movie.Title }`} movie={ movie } />)
+            }
             </div>
         </div>
     );

@@ -1,11 +1,7 @@
 import React from 'react';
+import { HeaderProps } from '../Types';
 
-type Props =
-{
-    text : string
-};
-
-const Header = (props : Props) => 
+const Header = (props : HeaderProps) => 
 {
     return (
         <header className="App-header">
