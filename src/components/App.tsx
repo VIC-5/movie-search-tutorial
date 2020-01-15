@@ -72,11 +72,11 @@ const App = () =>
             <p className="App-intro">Favourite movies</p>
             <div className="movies">
             {
-                loading && !errorMessage ?
-                <span>loading...</span> :
-                errorMessage ?
-                <div className="errorMessage">{ errorMessage }</div> :
-                movies.map((movie , index) => <Movie key={`${ index }-${ movie.Title }`} movie={ movie } />)
+                loading && !errorMessage
+                ? <span>loading...</span>
+                : errorMessage
+                ? <div className="errorMessage">{ errorMessage }</div>
+                : movies.map((movie , index) => <Movie key={`${ index }-${ movie.Title }`} movie={ movie } />)
             }
             </div>
         </div>
